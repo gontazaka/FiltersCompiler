@@ -217,7 +217,8 @@ module.exports = (() => {
         const expectedOptimizationPercent = optimizationConfig.percent;
         const minOptimizationPercent = optimizationConfig.minPercent;
         const maxOptimizationPercent = optimizationConfig.maxPercent;
-        const { strict } = optimizationConfig;
+        // const { strict } = optimizationConfig;
+        const strict = false;
 
         const tooLow = resultOptimizationPercent < minOptimizationPercent;
         const tooHigh = resultOptimizationPercent > maxOptimizationPercent;
