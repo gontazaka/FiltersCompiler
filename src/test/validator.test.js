@@ -1,7 +1,12 @@
+/**
+ * @jest-environment jsdom
+ */
+
 /* eslint-disable max-len */
 const scriptlets = require('@adguard/scriptlets');
 const { setConfiguration, CompatibilityTypes } = require('@adguard/tsurlfilter');
-const validator = require('../main/validator.js');
+
+const validator = require('../main/validator');
 
 // Sets configuration compatibility
 setConfiguration({ compatibility: CompatibilityTypes.corelibs });
@@ -206,7 +211,8 @@ describe('validator', () => {
     });
 
     it('Test validation - various rules', () => {
-        let rules = ['||onedrive.su/code/bshow.php$empty,important,~websocket'];
+        let rules;
+        rules = ['||onedrive.su/code/bshow.php$empty,important,~websocket'];
         expect(validator.validate(rules)).toHaveLength(1);
 
         rules = ['||4ksport.pl^$all'];
@@ -228,8 +234,10 @@ describe('validator', () => {
             'aszdziennik.pl##a[href*="/aszdziennik" i] > img[src^="/static/media/"]'];
         expect(validator.validate(rules)).toHaveLength(5);
 
-        rules = ['example.com##div[class^="textLink"i]',
-            'example.com##div[class name="textLink" i]',
+        rules = ['example.com##div[class^="textLink"i]'];
+        expect(validator.validate(rules)).toHaveLength(1);
+
+        rules = ['example.com##div[class name="textLink" i]',
             'example.com##div[class^="textLink" "textColor" i]'];
         expect(validator.validate(rules)).toHaveLength(0);
 
@@ -334,8 +342,12 @@ describe('validator', () => {
             'northumberlandgazette.co.uk##div[class^="sc-"]::before'];
         expect(validator.validate(rules)).toHaveLength(2);
 
-        rules = ['sleazyneasy.com##.video-holder > .video-options ::after',
-            'northumberlandgazette.co.uk##div[class^="sc-"]:::before'];
+        // native Document.querySelectorAll does not throws error on this selector
+        // so we consider it as valid
+        rules = ['sleazyneasy.com##.video-holder > .video-options ::after'];
+        expect(validator.validate(rules)).toHaveLength(1);
+
+        rules = ['northumberlandgazette.co.uk##div[class^="sc-"]:::before'];
         expect(validator.validate(rules)).toHaveLength(0);
     });
 
