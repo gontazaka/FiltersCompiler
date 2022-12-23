@@ -47,6 +47,21 @@ describe('validator', () => {
             '#main-container > div[\\:class^="$test.ad.RenderedDesktop"]',
             'div[class\\"ads-article\\"]',
             "[class\\'ads-article\\']",
+            // TODO: delete this comment later.
+            // considered as invalid by nwsapi until the bugs are fixed
+            // but they should be valid
+            // https://github.com/dperini/nwsapi/issues/55:
+            'div:not(div > span)',
+            'div:not(h1 + p)',
+            // TODO: delete this comment later.
+            // https://github.com/dperini/nwsapi/issues/71:
+            '.i_con + :not(.i_con):not([href="javascript:void(0);"])',
+            '.share--content button:not([onclick="window.print();"])',
+            '.sns > a[href^="javascript:openSendNews"]:not([href="javascript:openSendNews(\'url\');"])',
+            '.social > nav > ul > li > a[href="javascript:;"][onclick^="Share"]:not([onclick="Share(\'P\');"])',
+            // `*:not(<arg>)` with standard selector `arg`
+            'html:not([style]) tbody > tr[align="left"]',
+            '.banner:has(~ .right_bx, ~ div[class^="aside"])',
         ];
         test.each(validSelectors)('%s', (selector) => {
             const rules = [`example.com##${selector}`];
@@ -61,6 +76,10 @@ describe('validator', () => {
             'div[class"ads-article"]',
             'img[height="60"][width"468"]',
             'table[style*=border: 0px"]',
+            // `*:not(<arg>)` with extended selector `arg`
+            // not valid due to top DOM node limitation
+            // https://github.com/AdguardTeam/ExtendedCss/#extended-css-not-limitations
+            'html:not(:has(span))',
         ];
         test.each(invalidSelectors)('%s', (selector) => {
             const rules = [`example.com##${selector}`];
