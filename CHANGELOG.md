@@ -1,6 +1,13 @@
 # Filters Compiler Changelog
 
 
+## v1.1.79
+
+### Added
+
+- Locales validation `filters_i18n` schema for filter 23
+
+
 ## v1.1.77
 
 ### Added
